@@ -24,10 +24,10 @@ from bop_toolkit_lib import visibility
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'lm',
+  'dataset': 'tracebot',
 
   # Dataset split. Options: 'train', 'val', 'test'.
-  'dataset_split': 'test',
+  'dataset_split': 'train_pbr',
 
   # Dataset split type. None = default. See dataset_params.py for options.
   'dataset_split_type': None,
@@ -39,7 +39,7 @@ p = {
   'delta': 15,
 
   # Type of the renderer.
-  'renderer_type': 'vispy',  # Options: 'vispy', 'cpp', 'python'.
+  'renderer_type': 'python',  # Options: 'vispy', 'cpp', 'python'.
 
   # Folder containing the BOP datasets.
   'datasets_path': config.datasets_path,
@@ -81,6 +81,7 @@ for obj_id in dp_model['obj_ids']:
   ren.add_object(obj_id, model_fpath)
 
 scene_ids = dataset_params.get_present_scene_ids(dp_split)
+print(scene_ids)
 for scene_id in scene_ids:
 
   # Load scene info and ground-truth poses.
@@ -195,5 +196,6 @@ for scene_id in scene_ids:
 
   # Save the info for the current scene.
   scene_gt_info_path = dp_split['scene_gt_info_tpath'].format(scene_id=scene_id)
+  print(scene_gt_info_path)
   misc.ensure_dir(os.path.dirname(scene_gt_info_path))
   inout.save_json(scene_gt_info_path, scene_gt_info)

@@ -86,6 +86,7 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'hb': list(range(1, 34)),  # Full HB dataset.
     'ycbv': list(range(1, 22)),
     'hope': list(range(1, 29)),
+    'tracebot': list(range(1, 8)),
   }[dataset_name]
 
   # ID's of objects with ambiguous views evaluated using the ADI pose error
@@ -104,6 +105,7 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'hb': [6, 10, 11, 12, 13, 14, 18, 24, 29],
     'ycbv': [1, 13, 14, 16, 18, 19, 20, 21],
     'hope': None,  # Not defined yet.
+    'tracebot': None, # this is a lie but i dont want to look into that right now c:
   }[dataset_name]
 
   # T-LESS includes two types of object models, CAD and reconstructed.
@@ -373,6 +375,13 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['azimuth_range'] = None  # Not calculated yet.
       p['elev_range'] = None  # Not calculated yet.
 
+  # Linemod (LM).
+  elif dataset_name == 'tracebot':
+    p['scene_ids'] = list(range(50))
+    p['im_size'] = (1280, 720)
+
+    if split == 'test':
+        p['scene_ids'] = list(range(50, 68))
   else:
     raise ValueError('Unknown BOP dataset ({}).'.format(dataset_name))
 

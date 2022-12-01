@@ -288,6 +288,7 @@ class RendererPython(renderer.Renderer):
       surf_color = kwargs['surf_color']
 
     # Load the object model.
+    print(model_path)
     model = inout.load_ply(model_path)
     self.models[obj_id] = model
 
