@@ -93,7 +93,7 @@ for scene_id in scene_ids:
   scene_gt_info = {}
   im_ids = sorted(scene_gt.keys())
   for im_counter, im_id in enumerate(im_ids):
-    if im_counter % 100 == 0:
+    if im_counter % 1 == 0:
       misc.log(
         'Calculating GT info - dataset: {} ({}, {}), scene: {}, im: {}'.format(
           p['dataset'], p['dataset_split'], p['dataset_split_type'], scene_id,

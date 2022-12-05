@@ -375,13 +375,13 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['azimuth_range'] = None  # Not calculated yet.
       p['elev_range'] = None  # Not calculated yet.
 
-  # Linemod (LM).
+  # TRACEBOT.
   elif dataset_name == 'tracebot':
-    p['scene_ids'] = list(range(50))
+    p['scene_ids'] = list(range(22,68))
     p['im_size'] = (1280, 720)
 
-    if split == 'test':
-        p['scene_ids'] = list(range(50, 68))
+    #if split == 'test':
+    #    p['scene_ids'] = list(range(50, 68))
   else:
     raise ValueError('Unknown BOP dataset ({}).'.format(dataset_name))
 
