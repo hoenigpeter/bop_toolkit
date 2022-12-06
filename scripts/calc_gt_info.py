@@ -27,7 +27,7 @@ p = {
   'dataset': 'tracebot',
 
   # Dataset split. Options: 'train', 'val', 'test'.
-  'dataset_split': 'train_pbr',
+  'dataset_split': 'test',
 
   # Dataset split type. None = default. See dataset_params.py for options.
   'dataset_split_type': None,
@@ -39,7 +39,7 @@ p = {
   'delta': 15,
 
   # Type of the renderer.
-  'renderer_type': 'python',  # Options: 'vispy', 'cpp', 'python'.
+  'renderer_type': 'vispy',  # Options: 'vispy', 'cpp', 'python'.
 
   # Folder containing the BOP datasets.
   'datasets_path': config.datasets_path,

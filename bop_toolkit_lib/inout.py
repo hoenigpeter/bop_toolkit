@@ -43,6 +43,9 @@ def load_depth(path):
   :return: ndarray with the loaded depth image.
   """
   d = imageio.imread(path)
+  if d.ndim == 3:
+    return d[:,:,0].astype(np.float32)
+
   return d.astype(np.float32)
 
 
