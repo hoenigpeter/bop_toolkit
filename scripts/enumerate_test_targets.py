@@ -13,7 +13,7 @@ from bop_toolkit_lib import misc
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tracebot',
+  'dataset': 'lm',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'test',

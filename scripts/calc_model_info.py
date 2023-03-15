@@ -12,7 +12,7 @@ from bop_toolkit_lib import misc
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'lm',
+  'dataset': 'lmo_random_texture',
 
   # Type of input object models.
   'model_type': None,
@@ -34,8 +34,10 @@ for obj_id in dp_model['obj_ids']:
     model = inout.load_ply(dp_model['model_tpath'].format(obj_id=obj_id))
 
     # Calculate 3D bounding box.
-    ref_pt = map(float, model['pts'].min(axis=0).flatten())
-    size = map(float, (model['pts'].max(axis=0) - ref_pt).flatten())
+    ref_pt = model['pts'].min(axis=0).flatten()
+    size =(model['pts'].max(axis=0) - ref_pt)
+    #ref_pt = map(float, model['pts'].min(axis=0).flatten())
+    #size = map(float, (model['pts'].max(axis=0) - ref_pt).flatten())
 
     # Calculated diameter.
     diameter = misc.calc_pts_diameter(model['pts'])

@@ -19,13 +19,13 @@ from bop_toolkit_lib import misc
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tudl',
+  'dataset': 'ycbv',
 
   # Dataset split. Options: 'train', 'test'.
   'dataset_split': 'train',
 
   # Dataset split type. Options: 'synt', 'real', None = default. See dataset_params.py for options.
-  'dataset_split_type': 'pbr',
+  'dataset_split_type': 'real',
 
   # bbox type. Options: 'modal', 'amodal'.
   'bbox_type': 'amodal',
@@ -90,8 +90,9 @@ for scene_id in dp_split['scene_ids']:
         coco_scene_output["images"].append(image_info)
         gt_info = scene_gt_info[scene_view]
         
+        print("Img: ", img_path)
         # Go through each instance in view
-        for idx,inst in enumerate(inst_list): 
+        for idx,inst in enumerate(inst_list):
             category_info = inst['obj_id']
             visibility = gt_info[idx]['visib_fract']
             # Add ignore flag for objects smaller than 10% visible

@@ -18,13 +18,13 @@ from bop_toolkit_lib import visibility
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tracebot_real',
+  'dataset': 'lmo_3r',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'train',
 
   # Dataset split type. None = default. See dataset_params.py for options.
-  'dataset_split_type': None,
+  'dataset_split_type': 'pbr',
 
   # Tolerance used in the visibility test [mm].
   'delta': 15,  # 5 for ITODD, 15 for the other datasets.
@@ -49,6 +49,7 @@ dp_model = dataset_params.get_model_params(
   p['datasets_path'], p['dataset'], model_type)
 
 scene_ids = dataset_params.get_present_scene_ids(dp_split)
+
 for scene_id in scene_ids:
 
   # Load scene GT.

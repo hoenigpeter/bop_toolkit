@@ -39,7 +39,7 @@ def get_camera_params(datasets_path, dataset_name, cam_type=None):
       cam_type = 'primesense'
     cam_filename = 'camera_{}.json'.format(cam_type)
 
-  elif dataset_name == 'ycbv':
+  elif dataset_name == 'ycbv' or dataset_name == 'ycbv_random_texture':
     # Includes images captured by two sensors. Use the "UW" sensor as default.
     if cam_type is None:
       cam_type = 'uw'
@@ -85,9 +85,16 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'hbs': [1, 3, 4, 8, 9, 10, 12, 15, 17, 18, 19, 22, 23, 29, 32, 33],
     'hb': list(range(1, 34)),  # Full HB dataset.
     'ycbv': list(range(1, 22)),
+    'ycbv_random_texture': list(range(1, 22)),
     'hope': list(range(1, 29)),
     'tracebot': list(range(1, 9)),  # 8 objects
-    'tracebot_real': [6,9],
+    'tracebot_real': [6,8],
+    'lmo_random_texture': [1, 5, 6, 8, 9, 10, 11, 12],
+    'lmo_random_texture_all': [1, 5, 6, 8, 9, 10, 11, 12],
+    'lmo_random_texture_no_bump': [1, 5, 6, 8, 9, 10, 11, 12],
+    'lmo_random_texture_no_displacement': [1, 5, 6, 8, 9, 10, 11, 12],
+    'lmo_random_texture_no_bump_no_displacement': list(range(1, 16)),
+    'lmo_3r': list(range(1, 16)),
   }[dataset_name]
 
   # ID's of objects with ambiguous views evaluated using the ADI pose error
@@ -105,9 +112,16 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'hbs': [10, 12, 18, 29],
     'hb': [6, 10, 11, 12, 13, 14, 18, 24, 29],
     'ycbv': [1, 13, 14, 16, 18, 19, 20, 21],
+    'ycbv_random_texture': [1, 13, 14, 16, 18, 19, 20, 21],
     'hope': None,  # Not defined yet.
     'tracebot': None, # this is a lie but i dont want to look into that right now c:
     'tracebot_real': None,
+    'lmo_random_texture': [10, 11],
+    'lmo_random_texture_all': [10, 11],
+    'lmo_random_texture_no_bump': [10, 11],
+    'lmo_random_texture_no_displacement': [10, 11],
+    'lmo_random_texture_no_bump_no_displacement': [3, 7, 10, 11],
+    'lmo_3r': [3, 7, 10, 11],
   }[dataset_name]
 
   # T-LESS includes two types of object models, CAD and reconstructed.
@@ -179,7 +193,16 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
   p['im_modalities'] = ['rgb', 'depth']
 
   # Linemod (LM).
-  if dataset_name == 'lm':
+  if dataset_name == 'lm' or dataset_name == 'lmo_random_texture_no_bump_no_displacement' or 'lmo_3r':
+    p['scene_ids'] = list(range(1, 16))
+    p['im_size'] = (640, 480)
+
+    if split == 'test':
+      p['depth_range'] = (600.90, 1102.35)
+      p['azimuth_range'] = (0, 2 * math.pi)
+      p['elev_range'] = (0, 0.5 * math.pi)
+
+  elif dataset_name == 'lm_random_texture':
     p['scene_ids'] = list(range(1, 16))
     p['im_size'] = (640, 480)
 
@@ -189,7 +212,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['elev_range'] = (0, 0.5 * math.pi)
 
   # Linemod-Occluded (LM-O).
-  elif dataset_name == 'lmo':
+  elif dataset_name == 'lmo' or dataset_name == 'lmo_random_texture' or dataset_name == 'lmo_random_texture_all' or dataset_name == 'lmo_random_texture_no_bump' or dataset_name == 'lmo_random_texture_no_displacement':
     p['scene_ids'] = {'train': [1, 5, 6, 8, 9, 10, 11, 12], 'test': [2]}[split]
     p['im_size'] = (640, 480)
 
@@ -343,7 +366,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['elev_range'] = (-0.5 * math.pi, 0.5 * math.pi)
 
   # YCB-Video (YCBV).
-  elif dataset_name == 'ycbv':
+  elif dataset_name == 'ycbv' or dataset_name == 'ycbv_random_texture':
     if split == 'train' and split_type is None:
       split_type = 'real'
 

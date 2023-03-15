@@ -31,7 +31,7 @@ def create_image_info(image_id, file_name, image_size):
 
     return image_info
 
-def create_annotation_info(annotation_id, image_id, object_id, binary_mask, bounding_box, mask_encoding_format='rle', tolerance=2, ignore=None):
+def create_annotation_info(annotation_id, image_id, object_id, binary_mask, bounding_box, mask_encoding_format='polygon', tolerance=2, ignore=None):
     """Creates info section of coco annotation
 
     :param annotation_id: integer to uniquly identify the annotation

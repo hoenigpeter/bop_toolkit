@@ -18,13 +18,13 @@ from bop_toolkit_lib import visualization
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'lm',
+  'dataset': 'lm_random_texture',
 
   # Dataset split. Options: 'train', 'val', 'test'.
-  'dataset_split': 'test',
+  'dataset_split': 'train',
 
   # Dataset split type. None = default. See dataset_params.py for options.
-  'dataset_split_type': None,
+  'dataset_split_type': 'pbr',
 
   # File with a list of estimation targets used to determine the set of images
   # for which the GT poses will be visualized. The file is assumed to be stored
@@ -34,8 +34,8 @@ p = {
 
   # Select ID's of scenes, images and GT poses to be processed.
   # Empty list [] means that all ID's will be used.
-  'scene_ids': [],
-  'im_ids': [],
+  'scene_ids': [0],
+  'im_ids': [0],
   'gt_ids': [],
 
   # Indicates whether to render RGB images.
@@ -125,8 +125,8 @@ for obj_id in dp_model['obj_ids']:
   ren.add_object(obj_id, model_path, surf_color=model_color)
 
 scene_ids = dataset_params.get_present_scene_ids(dp_split)
-for scene_id in scene_ids:
 
+for scene_id in scene_ids:
   # Load scene info and ground-truth poses.
   scene_camera = inout.load_scene_camera(
     dp_split['scene_camera_tpath'].format(scene_id=scene_id))

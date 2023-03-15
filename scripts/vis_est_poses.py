@@ -48,7 +48,7 @@ p = {
   # of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/path/to/csv/with/results',
+    '/home/hoenig/BOP/gdrnpp_bop2022/output/gdrn/ycbv/convnext_a6_AugCosyAAEGray_BG05_mlL1_DMask_amodalClipBox_classAware_ycbv/inference_model_final_wo_optim/ycbv_test/convnext-a6-AugCosyAAEGray-BG05-mlL1-DMask-amodalClipBox-classAware-ycbv-test-iter0_ycbv-test.csv',
   ],
 
   # Folder containing the BOP datasets.
@@ -113,6 +113,9 @@ for result_fname in p['result_filenames']:
     model_color = None
     if not p['vis_orig_color']:
       model_color = tuple(colors[(obj_id - 1) % len(colors)])
+    print(obj_id)
+    print(model_path)
+    print(model_color)
     ren.add_object(obj_id, model_path, surf_color=model_color)
 
   # Load pose estimates.
