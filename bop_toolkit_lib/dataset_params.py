@@ -24,7 +24,7 @@ def get_camera_params(datasets_path, dataset_name, cam_type=None):
   :param cam_type: Type of camera.
   :return: Dictionary with camera parameters for the specified dataset.
   """
-  if dataset_name == 'tless':
+  if dataset_name == 'tless' or dataset_name == 'tless_3r_1o' or dataset_name == 'tless_random_texture':
     # Includes images captured by three sensors. Use Primesense as default.
     if cam_type is None:
       cam_type = 'primesense'
@@ -90,11 +90,17 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'tracebot': list(range(1, 9)),  # 8 objects
     'tracebot_real': [6,8],
     'lmo_random_texture': [1, 5, 6, 8, 9, 10, 11, 12],
-    'lmo_random_texture_all': [1, 5, 6, 8, 9, 10, 11, 12],
+    'lmo_random_texture_all': list(range(1, 16)),
     'lmo_random_texture_no_bump': [1, 5, 6, 8, 9, 10, 11, 12],
     'lmo_random_texture_no_displacement': [1, 5, 6, 8, 9, 10, 11, 12],
     'lmo_random_texture_no_bump_no_displacement': list(range(1, 16)),
     'lmo_3r': list(range(1, 16)),
+    'lmo_5r': list(range(1, 16)),
+    'lmo_7r': list(range(1, 16)),
+    'lmo_3r_1o': list(range(1, 16)),
+    'lmo_5r_1o': list(range(1, 16)),
+    'tless_3r_1o': list(range(1, 31)),
+    'tless_random_texture': list(range(1, 31)),
   }[dataset_name]
 
   # ID's of objects with ambiguous views evaluated using the ADI pose error
@@ -117,11 +123,17 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'tracebot': None, # this is a lie but i dont want to look into that right now c:
     'tracebot_real': None,
     'lmo_random_texture': [10, 11],
-    'lmo_random_texture_all': [10, 11],
+    'lmo_random_texture_all': [3, 7, 10, 11],
     'lmo_random_texture_no_bump': [10, 11],
     'lmo_random_texture_no_displacement': [10, 11],
     'lmo_random_texture_no_bump_no_displacement': [3, 7, 10, 11],
     'lmo_3r': [3, 7, 10, 11],
+    'lmo_5r': [3, 7, 10, 11],
+    'lmo_7r': [3, 7, 10, 11],
+    'lmo_3r_1o': [3, 7, 10, 11],
+    'lmo_5r_1o': [3, 7, 10, 11],
+    'tless_3r_1o': list(range(1, 31)),
+    'tless_random_texture': list(range(1, 31)),
   }[dataset_name]
 
   # T-LESS includes two types of object models, CAD and reconstructed.
@@ -193,7 +205,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
   p['im_modalities'] = ['rgb', 'depth']
 
   # Linemod (LM).
-  if dataset_name == 'lm' or dataset_name == 'lmo_random_texture_no_bump_no_displacement' or 'lmo_3r':
+  if dataset_name == 'lm' or dataset_name == 'lmo_random_texture_all' or dataset_name == 'lmo_random_texture_no_bump_no_displacement' or dataset_name =='lmo_3r' or dataset_name =='lmo_5r' or dataset_name =='lmo_7r' or dataset_name =='lmo_3r_1o' or dataset_name =='lmo_5r_1o':
     p['scene_ids'] = list(range(1, 16))
     p['im_size'] = (640, 480)
 
@@ -212,7 +224,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['elev_range'] = (0, 0.5 * math.pi)
 
   # Linemod-Occluded (LM-O).
-  elif dataset_name == 'lmo' or dataset_name == 'lmo_random_texture' or dataset_name == 'lmo_random_texture_all' or dataset_name == 'lmo_random_texture_no_bump' or dataset_name == 'lmo_random_texture_no_displacement':
+  elif dataset_name == 'lmo' or dataset_name == 'lmo_random_texture' or dataset_name == 'lmo_random_texture_no_bump' or dataset_name == 'lmo_random_texture_no_displacement':
     p['scene_ids'] = {'train': [1, 5, 6, 8, 9, 10, 11, 12], 'test': [2]}[split]
     p['im_size'] = (640, 480)
 
@@ -222,7 +234,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['elev_range'] = (0, 0.5 * math.pi)
 
   # T-LESS.
-  elif dataset_name == 'tless':
+  elif dataset_name == 'tless' or dataset_name == 'tless_3r_1o' or dataset_name == 'tless_random_texture':
     if split == 'train':
       if split_type == 'synthetless':
         p['scene_ids'] = [1]

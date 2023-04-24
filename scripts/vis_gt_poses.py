@@ -18,7 +18,7 @@ from bop_toolkit_lib import visualization
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'lm_random_texture',
+  'dataset': 'lmo',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'train',

@@ -24,7 +24,7 @@ from bop_toolkit_lib import visibility
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'lmo_3r',
+  'dataset': 'lmo_7r',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'train',
@@ -61,7 +61,7 @@ dp_split = dataset_params.get_split_params(
   p['datasets_path'], p['dataset'], p['dataset_split'], p['dataset_split_type'])
 
 model_type = None
-if p['dataset'] == 'tless':
+if p['dataset'] == 'tless' or p['dataset'] == 'tless_3r_1o' or p['dataset'] == 'tless_random_texture':
   model_type = 'cad'
 dp_model = dataset_params.get_model_params(
   p['datasets_path'], p['dataset'], model_type)
@@ -71,6 +71,7 @@ misc.log('Initializing renderer...')
 
 # The renderer has a larger canvas for generation of masks of truncated objects.
 im_width, im_height = dp_split['im_size']
+print(im_width, " ", im_height)
 ren_width, ren_height = 3 * im_width, 3 * im_height
 ren_cx_offset, ren_cy_offset = im_width, im_height
 ren = renderer.create_renderer(

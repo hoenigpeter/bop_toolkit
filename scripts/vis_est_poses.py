@@ -38,17 +38,17 @@ p = {
   'vis_depth_diff': False,
 
   # If to use the original model color.
-  'vis_orig_color': False,
+  'vis_orig_color': True,
 
   # Type of the renderer (used for the VSD pose error function).
-  'renderer_type': 'vispy',  # Options: 'vispy', 'cpp', 'python'.
+  'renderer_type': 'cpp',  # Options: 'vispy', 'cpp', 'python'.
 
   # Names of files with pose estimates to visualize (assumed to be stored in
   # folder config.eval_path). See docs/bop_challenge_2019.md for a description
   # of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/BOP/gdrnpp_bop2022/output/gdrn/ycbv/convnext_a6_AugCosyAAEGray_BG05_mlL1_DMask_amodalClipBox_classAware_ycbv/inference_model_final_wo_optim/ycbv_test/convnext-a6-AugCosyAAEGray-BG05-mlL1-DMask-amodalClipBox-classAware-ycbv-test-iter0_ycbv-test.csv',
+    '/home/hoenig/bop_toolkit/scripts/a6-cPnP-lm-test-iter0_lm-test.csv',
   ],
 
   # Folder containing the BOP datasets.
