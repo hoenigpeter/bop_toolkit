@@ -48,7 +48,7 @@ p = {
   # of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/bop_toolkit/scripts/a6-cPnP-lm-test-iter0_lm-test.csv',
+    '/home/hoenig/bop_toolkit/scripts/a6-cPnP-itodd-random-texture-1-test-iter0_itodd-test.csv',
   ],
 
   # Folder containing the BOP datasets.
@@ -135,8 +135,8 @@ for result_fname in p['result_filenames']:
     # Load info and ground-truth poses for the current scene.
     scene_camera = inout.load_scene_camera(
       dp_split['scene_camera_tpath'].format(scene_id=scene_id))
-    scene_gt = inout.load_scene_gt(
-      dp_split['scene_gt_tpath'].format(scene_id=scene_id))
+    # scene_gt = inout.load_scene_gt(
+    #   dp_split['scene_gt_tpath'].format(scene_id=scene_id))
 
     for im_ind, (im_id, im_ests) in enumerate(scene_ests.items()):
 
@@ -160,9 +160,9 @@ for result_fname in p['result_filenames']:
         # Select the number of top estimated poses to visualize.
         if p['n_top'] == 0:  # All estimates are considered.
           n_top_curr = None
-        elif p['n_top'] == -1:  # Given by the number of GT poses.
-          n_gt = sum([gt['obj_id'] == obj_id for gt in scene_gt[im_id]])
-          n_top_curr = n_gt
+        # elif p['n_top'] == -1:  # Given by the number of GT poses.
+        #   n_gt = sum([gt['obj_id'] == obj_id for gt in scene_gt[im_id]])
+        #   n_top_curr = n_gt
         else:  # Specified by the parameter n_top.
           n_top_curr = p['n_top']
         obj_ests_sorted = obj_ests_sorted[slice(0, n_top_curr)]

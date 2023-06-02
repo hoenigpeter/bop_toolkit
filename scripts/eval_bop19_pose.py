@@ -50,6 +50,11 @@ p = {
       'type': 'mspd',
       'correct_th': [[th] for th in np.arange(5, 51, 5)]
     },
+    {
+      'n_top': -1,
+      'type': 'ad',
+      'correct_th': [[th] for th in np.arange(5, 51, 5)]
+    },
   ],
 
   # Minimum visible surface fraction of a valid GT pose.
@@ -68,7 +73,7 @@ p = {
   # description of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/BOP/GDRNet/output/gdrn/40_epochs/lm_7r/inference_model_final/lm_13_test/a6-cPnP-lm-7r-test-iter0_lm-test.csv',
+    '/home/hoenig/bop_toolkit/scripts/a6-cPnP-itodd-1-test-iter0_itodd-test.csv',
   ],
 
   # Folder with results to be evaluated.

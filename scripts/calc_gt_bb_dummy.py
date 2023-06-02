@@ -63,11 +63,11 @@ for scene_id in dp_split['scene_ids']:
     segmentation_id = 1
 
     coco_scene_output = {
-        "info": INFO,
-        "licenses": [],
-        "categories": CATEGORIES,
-        "images": [],
-        "annotations": []
+        # "info": INFO,
+        # "licenses": [],
+        # "categories": CATEGORIES,
+        # "images": [],
+        # "annotations": []
     }
 
     # Load info about the GT poses (e.g. visibility) for the current scene.
@@ -75,6 +75,7 @@ for scene_id in dp_split['scene_ids']:
     scene_gt_info = inout.load_json(dp_split['scene_gt_info_tpath'].format(scene_id=scene_id), keys_to_int=True)
     # Output coco path
     coco_gt_path = dp_split['scene_gt_coco_tpath'].format(scene_id=scene_id)
+    coco_gt_path = dp_split['split_path'] + "/{scene_id:06d}/scene_gt_bb_dummy.json".format(scene_id=scene_id)
     if bbox_type == 'modal':
         coco_gt_path = coco_gt_path.replace('scene_gt_coco', 'scene_gt_coco_modal')
     misc.log('Calculating Coco Annotations - dataset: {} ({}, {}), scene: {}'.format(
@@ -87,7 +88,7 @@ for scene_id in dp_split['scene_ids']:
         img_path = dp_split['rgb_tpath'].format(scene_id=scene_id, im_id=im_id)
         relative_img_path = os.path.relpath(img_path, os.path.dirname(coco_gt_path))
         image_info = pycoco_utils.create_image_info(im_id, relative_img_path, dp_split['im_size'])
-        coco_scene_output["images"].append(image_info)
+        #coco_scene_output["images"].append(image_info)
         gt_info = scene_gt_info[scene_view]
         
         print("Img: ", img_path)
@@ -117,7 +118,16 @@ for scene_id in dp_split['scene_ids']:
                 segmentation_id, im_id, category_info, binary_inst_mask_visib, bounding_box, tolerance=2, ignore=ignore_gt)
 
             if annotation_info is not None:
-                coco_scene_output["annotations"].append(annotation_info)
+                annotation_dict = {
+                    "obj_id": annotation_info["category_id"],
+                    "bbox_est": annotation_info["bbox"],
+                    "score": 1.0,
+                    "time": 0.0
+                }
+                image_id_str = "{}/{}".format(scene_id, im_id)
+                if image_id_str not in coco_scene_output:
+                    coco_scene_output[image_id_str] = []
+                coco_scene_output[image_id_str].append(annotation_dict)
 
             segmentation_id = segmentation_id + 1
 

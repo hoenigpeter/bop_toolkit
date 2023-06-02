@@ -81,7 +81,9 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'ruapc': list(range(1, 15)),
     'icmi': list(range(1, 7)),
     'icbin': list(range(1, 3)),
+    'icbin_random_texture': list(range(1, 3)),
     'itodd': list(range(1, 29)),
+    'itodd_random_texture': list(range(1, 29)),
     'hbs': [1, 3, 4, 8, 9, 10, 12, 15, 17, 18, 19, 22, 23, 29, 32, 33],
     'hb': list(range(1, 34)),  # Full HB dataset.
     'ycbv': list(range(1, 22)),
@@ -114,7 +116,9 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'ruapc': [8, 9, 12, 13],
     'icmi': [1, 2, 6],
     'icbin': [1],
+    'icbin_random_texture': [1],
     'itodd': [2, 3, 4, 5, 7, 8, 9, 11, 12, 14, 17, 18, 19, 23, 24, 25, 27, 28],
+    'itodd_random_texture': [2, 3, 4, 5, 7, 8, 9, 11, 12, 14, 17, 18, 19, 23, 24, 25, 27, 28],
     'hbs': [10, 12, 18, 29],
     'hb': [6, 10, 11, 12, 13, 14, 18, 24, 29],
     'ycbv': [1, 13, 14, 16, 18, 19, 20, 21],
@@ -198,7 +202,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
   if split_type == 'pbr':
     # The photorealistic synthetic images are provided in the JPG format.
     rgb_ext = '.jpg'
-  elif dataset_name == 'itodd':
+  elif dataset_name == 'itodd' or dataset_name == 'itodd_random_texture':
     gray_ext = '.tif'
     depth_ext = '.tif'
 
@@ -313,7 +317,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['elev_range'] = (0, 0.5 * math.pi)
 
   # Doumanoglou et al. (IC-BIN).
-  elif dataset_name == 'icbin':
+  elif dataset_name == 'icbin' or dataset_name == 'icbin_random_texture':
     p['scene_ids'] = {
       'train': list(range(1, 3)),
       'test': list(range(1, 4))
@@ -326,7 +330,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['elev_range'] = (-1.0297, 0.5 * math.pi)  # (-59, 90) [deg].
 
   # MVTec ITODD.
-  elif dataset_name == 'itodd':
+  elif dataset_name == 'itodd' or dataset_name == 'itodd_random_texture':
     p['scene_ids'] = {
       'train': [],
       'val': [1],
