@@ -48,7 +48,7 @@ p = {
   # of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/bop_toolkit/scripts/a6-cPnP-itodd-random-texture-1-test-iter0_itodd-test.csv',
+    '/home/hoenig/bop_toolkit/scripts/a6-cPnP-itodd-1-per-obj-iter0_itodd-test.csv',
   ],
 
   # Folder containing the BOP datasets.

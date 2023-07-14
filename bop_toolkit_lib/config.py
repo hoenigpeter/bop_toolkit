@@ -13,10 +13,11 @@ if 'BOP_PATH' in os.environ:
   datasets_path = os.environ['BOP_PATH']
 else:
   #datasets_path = r'/path/to/bop/datasets'
-  datasets_path = '/home/hoenig/BOP/GDRNet/datasets/BOP_DATASETS'
+  #datasets_path = '/home/hoenig/BOP/GDRNet/datasets/BOP_DATASETS'
+  datasets_path = '/home/hoenig/temp/detectron2_bop/datasets/BOP_DATASETS'
 
 # Folder with pose results to be evaluated.
-results_path = r'/path/to/folder/with/results'
+results_path = r'/home/hoenig/bop_toolkit/scripts'
 
 # Folder for the calculated pose errors and performance scores.
 eval_path = r'/home/hoenig/bop_toolkit/scripts/results/eval'

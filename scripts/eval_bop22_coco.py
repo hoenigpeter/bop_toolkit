@@ -1,7 +1,9 @@
 import os
 import numpy as np
-from pycocotools.coco import COCO
-from pycocotools.cocoeval import COCOeval
+#from pycocotools.coco import COCO
+from bop_toolkit_lib.cocoapi.PythonAPI.pycocotools.coco import COCO
+#from pycocotools.cocoeval import COCOeval
+from bop_toolkit_lib.cocoapi.PythonAPI.pycocotools.cocoeval import COCOeval
 from bop_toolkit_lib import pycoco_utils
 import argparse
 
@@ -10,6 +12,9 @@ from bop_toolkit_lib import dataset_params
 from bop_toolkit_lib import inout
 from bop_toolkit_lib import misc
 
+from collections import defaultdict
+import time
+
 
 # PARAMETERS (some can be overwritten by the command line arguments below).
 ################################################################################
@@ -17,7 +22,7 @@ p = {
   # Names of files with detection results for which to calculate the Average Precisions
   # (assumed to be stored in folder p['results_path']). 
   'result_filenames': [
-    'json/file/with/coco/results',
+    'random-texture-gdrnet_lm-test_ddd.json',
   ],
 
   # Folder with results to be evaluated.
@@ -30,7 +35,7 @@ p = {
   'datasets_path': config.datasets_path,
   
   # Annotation type that should be evaluated. Can be 'segm' or 'bbox'.
-  'ann_type': 'segm',
+  'ann_type': 'bbox',
 
   # bbox type. Options: 'modal', 'amodal'.
   'bbox_type': 'amodal',
