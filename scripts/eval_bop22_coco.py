@@ -22,7 +22,7 @@ p = {
   # Names of files with detection results for which to calculate the Average Precisions
   # (assumed to be stored in folder p['results_path']). 
   'result_filenames': [
-    'random-texture-gdrnet_lm-test_ddd.json',
+    'frcnn-lm_lm-test.json',
   ],
 
   # Folder with results to be evaluated.

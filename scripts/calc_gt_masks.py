@@ -18,7 +18,7 @@ from bop_toolkit_lib import visibility
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'itodd_random_texture',
+  'dataset': 'tless_7r',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'train',
@@ -43,7 +43,7 @@ dp_split = dataset_params.get_split_params(
   p['datasets_path'], p['dataset'], p['dataset_split'], p['dataset_split_type'])
 
 model_type = None
-if p['dataset'] == 'tless' or p['dataset'] == 'tless_3r_1o'  or p['dataset'] == 'tless_random_texture':
+if p['dataset'] == 'tless' or p['dataset'] == 'tless_3r' or p['dataset'] == 'tless_5r' or p['dataset'] == 'tless_7r'  or p['dataset'] == 'tless_random_texture':
   model_type = 'cad'
 dp_model = dataset_params.get_model_params(
   p['datasets_path'], p['dataset'], model_type)

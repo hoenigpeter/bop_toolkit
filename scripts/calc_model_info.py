@@ -12,7 +12,7 @@ from bop_toolkit_lib import misc
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'lmo_random_texture',
+  'dataset': 'egad',
 
   # Type of input object models.
   'model_type': None,

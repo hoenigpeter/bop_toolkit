@@ -24,7 +24,7 @@ def get_camera_params(datasets_path, dataset_name, cam_type=None):
   :param cam_type: Type of camera.
   :return: Dictionary with camera parameters for the specified dataset.
   """
-  if dataset_name == 'tless' or dataset_name == 'tless_3r_1o' or dataset_name == 'tless_random_texture':
+  if dataset_name == 'tless' or dataset_name == 'tless_3r' or dataset_name == 'tless_5r' or dataset_name == 'tless_7r'or dataset_name == 'tless_random_texture':
     # Includes images captured by three sensors. Use Primesense as default.
     if cam_type is None:
       cam_type = 'primesense'
@@ -101,8 +101,11 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'lmo_7r': list(range(1, 16)),
     'lmo_3r_1o': list(range(1, 16)),
     'lmo_5r_1o': list(range(1, 16)),
-    'tless_3r_1o': list(range(1, 31)),
+    'tless_3r': list(range(1, 31)),
+    'tless_5r': list(range(1, 31)),
+    'tless_7r': list(range(1, 31)),
     'tless_random_texture': list(range(1, 31)),
+    'egad': list(range(1, 50)),
   }[dataset_name]
 
   # ID's of objects with ambiguous views evaluated using the ADI pose error
@@ -136,13 +139,19 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'lmo_7r': [3, 7, 10, 11],
     'lmo_3r_1o': [3, 7, 10, 11],
     'lmo_5r_1o': [3, 7, 10, 11],
-    'tless_3r_1o': list(range(1, 31)),
+    'tless_3r': list(range(1, 31)),
+    'tless_5r': list(range(1, 31)),
+    'tless_7r': list(range(1, 31)),
     'tless_random_texture': list(range(1, 31)),
+    'egad': list(range(1, 50)),
   }[dataset_name]
 
   # T-LESS includes two types of object models, CAD and reconstructed.
   # Use the CAD models as default.
-  if dataset_name == 'tless' and model_type is None:
+  if (dataset_name == 'tless' or dataset_name == 'tless_3r' or dataset_name == 'tless_5r' or dataset_name == 'tless_7r'or dataset_name == 'tless_random_texture') and model_type is None:
+    model_type = 'cad'
+
+  if dataset_name == 'egad' and model_type is None:
     model_type = 'cad'
 
   # Both versions of the HB dataset share the same directory.
@@ -238,7 +247,7 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['elev_range'] = (0, 0.5 * math.pi)
 
   # T-LESS.
-  elif dataset_name == 'tless' or dataset_name == 'tless_3r_1o' or dataset_name == 'tless_random_texture':
+  elif dataset_name == 'tless' or dataset_name == 'tless_3r'  or dataset_name == 'tless_5r'  or dataset_name == 'tless_7r' or dataset_name == 'tless_random_texture':
     if split == 'train':
       if split_type == 'synthetless':
         p['scene_ids'] = [1]
@@ -410,6 +419,19 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       'test': list(range(1, 41))
     }[split]
     p['im_size'] = (1920, 1080)
+
+    if split == 'test':
+      p['depth_range'] = None  # Not calculated yet.
+      p['azimuth_range'] = None  # Not calculated yet.
+      p['elev_range'] = None  # Not calculated yet.
+
+  # HOPE.
+  elif dataset_name == 'egad':
+    p['scene_ids'] = {
+      'train': list(range(1, 50)),
+      'test': list(range(1, 10))
+    }[split]
+    p['im_size'] = (640, 480)
 
     if split == 'test':
       p['depth_range'] = None  # Not calculated yet.
