@@ -27,7 +27,7 @@
   {"error": -1, "error_norm": -1, "est_id": -1, "gt_id": 1, "im_id": 27, "obj_id": 5, "scene_id": 2, "score": -1, "valid": true},
   {"error": -1, "error_norm": -1, "est_id": -1, "gt_id": 2, "im_id": 27, "obj_id": 6, "scene_id": 2, "score": -1, "valid": false},
   {"error": -1, "error_norm": -1, "est_id": -1, "gt_id": 3, "im_id": 27, "obj_id": 8, "scene_id": 2, "score": -1, "valid": true},
-  {"error": -1, "error_norm": -1, "est_id": -1, "gt_id": 4, "im_id": 27, "obj_id": 9, "scene_id": 2, "score": -1, "valid": true},
+  {"error": [0.0461716044632551], "error_norm": [0.9234320892651019], "est_id": 0, "gt_id": 4, "im_id": 27, "obj_id": 9, "scene_id": 2, "score": 0.2581493286805178, "valid": true},
   {"error": -1, "error_norm": -1, "est_id": -1, "gt_id": 5, "im_id": 27, "obj_id": 10, "scene_id": 2, "score": -1, "valid": true},
   {"error": -1, "error_norm": -1, "est_id": -1, "gt_id": 6, "im_id": 27, "obj_id": 11, "scene_id": 2, "score": -1, "valid": true},
   {"error": -1, "error_norm": -1, "est_id": -1, "gt_id": 7, "im_id": 27, "obj_id": 12, "scene_id": 2, "score": -1, "valid": true},

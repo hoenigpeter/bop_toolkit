@@ -1,8 +1,8 @@
 {
-  "bop19_average_recall": 0.0,
-  "bop19_average_recall_ad": 0.0006920415224913495,
-  "bop19_average_recall_mspd": 0.0,
-  "bop19_average_recall_mssd": 0.0,
-  "bop19_average_recall_vsd": 0.0,
-  "bop19_average_time_per_image": 2.691937084197998
+  "bop19_average_recall": 0.23076124567474046,
+  "bop19_average_recall_ad": 0.5204152249134948,
+  "bop19_average_recall_mspd": 0.41280276816608996,
+  "bop19_average_recall_mssd": 0.1572318339100346,
+  "bop19_average_recall_vsd": 0.12224913494809687,
+  "bop19_average_time_per_image": 1.006994481086731
 }
