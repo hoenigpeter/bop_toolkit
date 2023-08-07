@@ -37,13 +37,13 @@ def compute_bounding_box_corners(obj_center, size):
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'lmo',
+  'dataset': 'tless',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'test',
 
   # Dataset split type. None = default. See dataset_params.py for options.
-  'dataset_split_type': None,
+  'dataset_split_type': 'primesense',
 
   # File with a list of estimation targets used to determine the set of images
   # for which the GT poses will be visualized. The file is assumed to be stored
@@ -83,7 +83,7 @@ p = {
 
   # Path templates for output images.
   'vis_rgb_tpath': os.path.join(
-    '{vis_path}', '{dataset}', '{split}', '{scene_id:06d}', '{im_id:06d}.jpg'),
+    '{vis_path}', '{dataset}', '{split}', '{scene_id:06d}', '{im_id:06d}.png'),
   'vis_depth_diff_tpath': os.path.join(
     '{vis_path}', '{dataset}', '{split}', '{scene_id:06d}',
     '{im_id:06d}_depth_diff.jpg'),
@@ -225,46 +225,48 @@ for scene_id in scene_ids:
 
     for pose in gt_poses:
         print("im_id: ", im_id)
-        print("obj_id: ", obj_id)
-        print(models_info[obj_id]['min_x'])
-        print(gt_poses)
-        min_point = (models_info[pose['obj_id']]['min_x'], models_info[pose['obj_id']]['min_y'], models_info[pose['obj_id']]['min_z'])
-        size = (models_info[pose['obj_id']]['size_x'], models_info[pose['obj_id']]['size_y'], models_info[pose['obj_id']]['size_z'])
-        print(size)
-        print(min_point)
-        obj_center = np.array(min_point) + 0.5 * np.array(size)
-        corners = compute_bounding_box_corners(obj_center, size)
+        print("obj_id: ", pose['obj_id'])
+        if pose['obj_id'] == 8:
+            print(models_info[obj_id]['min_x'])
+            print(gt_poses)
+            min_point = (models_info[pose['obj_id']]['min_x'], models_info[pose['obj_id']]['min_y'], models_info[pose['obj_id']]['min_z'])
+            size = (models_info[pose['obj_id']]['size_x'], models_info[pose['obj_id']]['size_y'], models_info[pose['obj_id']]['size_z'])
+            print(size)
+            print(min_point)
+            obj_center = np.array(min_point) + 0.5 * np.array(size)
+            corners = compute_bounding_box_corners(obj_center, size)
 
-        corner_points = compute_bounding_box_corners(obj_center, size)
-        corner_points_3d = misc.transform_pts_Rt(corner_points, pose['R'], pose['t'])
+            corner_points = compute_bounding_box_corners(obj_center, size)
+            corner_points_3d = misc.transform_pts_Rt(corner_points, pose['R'], pose['t'])
 
-        # Project 3D corner points onto the image plane
-        corner_points_2d = np.dot(K, corner_points_3d.T).T
-        corner_points_2d = corner_points_2d[:, :2] / corner_points_2d[:, 2:]
+            # Project 3D corner points onto the image plane
+            corner_points_2d = np.dot(K, corner_points_3d.T).T
+            corner_points_2d = corner_points_2d[:, :2] / corner_points_2d[:, 2:]
 
-        print("3D Bounding Box Corners:")
-        print(corners)
-        print("Transformed Corners:")
-        print(corner_points)
-        print("Projected 2D Corners:")
-        print(corner_points_2d)
+            print("3D Bounding Box Corners:")
+            print(corners)
+            print("Transformed Corners:")
+            print(corner_points)
+            print("Projected 2D Corners:")
+            print(corner_points_2d)
 
-        # Define lines connecting the corner points to form edges of the bounding box
-        lines = [
-            (0, 1), (1, 2), (2, 3), (3, 0),  # Front face
-            (4, 5), (5, 6), (6, 7), (7, 4),  # Back face
-            (0, 4), (1, 5), (2, 6), (3, 7)   # Connecting lines
-        ]
-      
-        # Draw the lines on the RGB image
-        for line in lines:
-            pt1 = tuple(corner_points_2d[line[0]].astype(int))
-            pt2 = tuple(corner_points_2d[line[1]].astype(int))
-            cv2.line(rgb, pt1, pt2, (0, 0, 255), 2)  # Red lines
+            # Define lines connecting the corner points to form edges of the bounding box
+            lines = [
+                (0, 1), (1, 2), (2, 3), (3, 0),  # Front face
+                (4, 5), (5, 6), (6, 7), (7, 4),  # Back face
+                (0, 4), (1, 5), (2, 6), (3, 7)   # Connecting lines
+            ]
+          
+            # Draw the lines on the RGB image
+            for line in lines:
+                pt1 = tuple(corner_points_2d[line[0]].astype(int))
+                pt2 = tuple(corner_points_2d[line[1]].astype(int))
+                cv2.line(rgb, pt1, pt2, (0, 0, 255), 2)  # Red lines
 
-        rgb_image_rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
-        print(vis_rgb_path)
-        cv2.imwrite(vis_rgb_path, rgb_image_rgb)
+            rgb_image_rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
+            print(vis_rgb_path)
+            misc.ensure_dir(os.path.dirname(vis_rgb_path))
+            cv2.imwrite(vis_rgb_path, rgb_image_rgb)
 
     # Visualization.
     # visualization.vis_object_poses(

@@ -66,7 +66,7 @@ p = {
   # of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/bop_toolkit/scripts/pix2pose-iccv19_lmo-test.csv',
+    '/home/hoenig/bop_toolkit/scripts/a6-cPnP-tless-8-test-iter0_tless-test.csv',
   ],
 
   # Folder containing the BOP datasets.
@@ -286,9 +286,10 @@ for result_fname in p['result_filenames']:
             for line in lines:
                 pt1 = tuple(corner_points_2d[line[0]].astype(int))
                 pt2 = tuple(corner_points_2d[line[1]].astype(int))
-                cv2.line(rgb, pt1, pt2, (0, 0, 255), 2)  # Red lines
+                cv2.line(rgb, pt1, pt2, (0, 255, 0), 2)  # Red lines
 
             rgb_image_rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
+            misc.ensure_dir(os.path.dirname(vis_rgb_path))
             cv2.imwrite(vis_rgb_path, rgb_image_rgb)
 
         # # Visualization.

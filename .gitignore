@@ -92,5 +92,6 @@ ENV/
 .idea
 scripts_internal/
 bop_toolkit_lib/config_internal.py
-.jpg
-.png
+*.jpg
+*.png
+*.csv
