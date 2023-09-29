@@ -13,10 +13,10 @@ from bop_toolkit_lib import misc
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'lm',
+  'dataset': 'itodd',
 
   # Dataset split. Options: 'train', 'val', 'test'.
-  'dataset_split': 'test',
+  'dataset_split': 'val',
 
   # Dataset split type. None = default. See dataset_params.py for options.
   'dataset_split_type': None,
@@ -30,7 +30,7 @@ p = {
   'im_subset_filename': None,
 
   # Name of the output file.
-  'test_targets_filename': 'test_targets_bop19.json',
+  'test_targets_filename': 'val_targets_bop19.json',
   
   # Folder containing the BOP datasets.
   'datasets_path': config.datasets_path,

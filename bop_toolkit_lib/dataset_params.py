@@ -106,6 +106,7 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'tless_7r': list(range(1, 31)),
     'tless_random_texture': list(range(1, 31)),
     'egad': list(range(1, 50)),
+    'gbuffer': list(range(1, 22)),
   }[dataset_name]
 
   # ID's of objects with ambiguous views evaluated using the ADI pose error
@@ -144,6 +145,7 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
     'tless_7r': list(range(1, 31)),
     'tless_random_texture': list(range(1, 31)),
     'egad': list(range(1, 50)),
+    'gbuffer': [1, 13, 14, 16, 18, 19, 20, 21],
   }[dataset_name]
 
   # T-LESS includes two types of object models, CAD and reconstructed.
@@ -410,6 +412,17 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
       p['depth_range'] = (612.92, 1243.59)
       p['azimuth_range'] = (0, 2 * math.pi)
       p['elev_range'] = (-1.2788, 1.1291)  # (-73.27, 64.69) [deg].
+
+  elif dataset_name == 'gbuffer':
+    if split == 'train':
+      p['scene_ids'] = {
+        'pbr': list(range(50))
+      }[split_type]
+    # elif split == 'test':
+    #   p['scene_ids'] = list(range(48, 60))
+
+    p['im_size'] = (512, 512)
+
 
   # HOPE.
   elif dataset_name == 'hope':

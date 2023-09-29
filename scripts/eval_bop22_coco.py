@@ -22,7 +22,7 @@ p = {
   # Names of files with detection results for which to calculate the Average Precisions
   # (assumed to be stored in folder p['results_path']). 
   'result_filenames': [
-    'frcnn-lm_lm-test.json',
+    'dummy-tless_tless-test-primesense.json',
   ],
 
   # Folder with results to be evaluated.
