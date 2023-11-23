@@ -19,12 +19,13 @@ from bop_toolkit_lib import misc
 from bop_toolkit_lib import renderer
 from bop_toolkit_lib import visibility
 
+import concurrent.futures
 
 # PARAMETERS.
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tless_3r',
+  'dataset': 'tless_reconstructed',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'train',
@@ -52,6 +53,122 @@ p = {
 }
 ################################################################################
 
+def process_scene(scene_id):
+    # Load scene info and ground-truth poses.
+    scene_camera = inout.load_scene_camera(
+      dp_split['scene_camera_tpath'].format(scene_id=scene_id))
+    scene_gt = inout.load_scene_gt(
+      dp_split['scene_gt_tpath'].format(scene_id=scene_id))
+
+    scene_gt_info = {}
+    im_ids = sorted(scene_gt.keys())
+    for im_counter, im_id in enumerate(im_ids):
+      if im_counter % 1 == 0:
+        misc.log(
+          'Calculating GT info - dataset: {} ({}, {}), scene: {}, im: {}'.format(
+            p['dataset'], p['dataset_split'], p['dataset_split_type'], scene_id,
+            im_id))
+
+      # Load depth image.
+      depth_fpath = dp_split['depth_tpath'].format(scene_id=scene_id, im_id=im_id)
+      if not os.path.exists(depth_fpath):
+        depth_fpath = depth_fpath.replace('.tif', '.png')
+      depth = inout.load_depth(depth_fpath)
+      depth *= scene_camera[im_id]['depth_scale']  # Convert to [mm].
+
+      K = scene_camera[im_id]['cam_K']
+      fx, fy, cx, cy = K[0, 0], K[1, 1], K[0, 2], K[1, 2]
+      im_size = (depth.shape[1], depth.shape[0])
+
+      scene_gt_info[im_id] = []
+      for gt_id, gt in enumerate(scene_gt[im_id]):
+
+        # Render depth image of the object model in the ground-truth pose.
+        depth_gt_large = ren.render_object(
+          gt['obj_id'], gt['cam_R_m2c'], gt['cam_t_m2c'],
+          fx, fy, cx + ren_cx_offset, cy + ren_cy_offset)['depth']
+        depth_gt = depth_gt_large[
+                    ren_cy_offset:(ren_cy_offset + im_height),
+                    ren_cx_offset:(ren_cx_offset + im_width)]
+
+        # Convert depth images to distance images.
+        dist_gt = misc.depth_im_to_dist_im_fast(depth_gt, K)
+        dist_im = misc.depth_im_to_dist_im_fast(depth, K)
+
+        # Estimation of the visibility mask.
+        visib_gt = visibility.estimate_visib_mask_gt(
+          dist_im, dist_gt, p['delta'], visib_mode='bop19')
+
+        # Mask of the object in the GT pose.
+        obj_mask_gt_large = depth_gt_large > 0
+        obj_mask_gt = dist_gt > 0
+
+        # Number of pixels in the whole object silhouette
+        # (even in the truncated part).
+        px_count_all = np.sum(obj_mask_gt_large)
+
+        # Number of pixels in the object silhouette with a valid depth measurement
+        # (i.e. with a non-zero value in the depth image).
+        px_count_valid = np.sum(dist_im[obj_mask_gt] > 0)
+
+        # Number of pixels in the visible part of the object silhouette.
+        px_count_visib = visib_gt.sum()
+
+        # Visible surface fraction.
+        if px_count_all > 0:
+          visib_fract = px_count_visib / float(px_count_all)
+        else:
+          visib_fract = 0.0
+
+        # Bounding box of the whole object silhouette
+        # (including the truncated part).
+        bbox = [-1, -1, -1, -1]
+        if px_count_visib > 0:
+          ys, xs = obj_mask_gt_large.nonzero()
+          ys -= ren_cy_offset
+          xs -= ren_cx_offset
+          bbox = misc.calc_2d_bbox(xs, ys, im_size)
+
+        # Bounding box of the visible surface part.
+        bbox_visib = [-1, -1, -1, -1]
+        if px_count_visib > 0:
+          ys, xs = visib_gt.nonzero()
+          bbox_visib = misc.calc_2d_bbox(xs, ys, im_size)
+
+        # Store the calculated info.
+        scene_gt_info[im_id].append({
+          'px_count_all': int(px_count_all),
+          'px_count_valid': int(px_count_valid),
+          'px_count_visib': int(px_count_visib),
+          'visib_fract': float(visib_fract),
+          'bbox_obj': [int(e) for e in bbox],
+          'bbox_visib': [int(e) for e in bbox_visib]
+        })
+
+        # Visualization of the visibility mask.
+        if p['vis_visibility_masks']:
+
+          depth_im_vis = visualization.depth_for_vis(depth, 0.2, 1.0)
+          depth_im_vis = np.dstack([depth_im_vis] * 3)
+
+          visib_gt_vis = visib_gt.astype(np.float)
+          zero_ch = np.zeros(visib_gt_vis.shape)
+          visib_gt_vis = np.dstack([zero_ch, visib_gt_vis, zero_ch])
+
+          vis = 0.5 * depth_im_vis + 0.5 * visib_gt_vis
+          vis[vis > 1] = 1
+
+          vis_path = p['vis_mask_visib_tpath'].format(
+            delta=p['delta'], dataset=p['dataset'], split=p['dataset_split'],
+            scene_id=scene_id, im_id=im_id, gt_id=gt_id)
+          misc.ensure_dir(os.path.dirname(vis_path))
+          inout.save_im(vis_path, vis)
+
+    # Save the info for the current scene.
+    scene_gt_info_path = dp_split['scene_gt_info_tpath'].format(scene_id=scene_id)
+    print(scene_gt_info_path)
+    misc.ensure_dir(os.path.dirname(scene_gt_info_path))
+    inout.save_json(scene_gt_info_path, scene_gt_info)
 
 if p['vis_visibility_masks']:
   from bop_toolkit_lib import visualization
@@ -61,7 +178,7 @@ dp_split = dataset_params.get_split_params(
   p['datasets_path'], p['dataset'], p['dataset_split'], p['dataset_split_type'])
 
 model_type = None
-if p['dataset'] == 'tless' or p['dataset'] == 'tless_3r' or p['dataset'] == 'tless_random_texture':
+if p['dataset'] == 'tless' or p['dataset'] == 'tless_3r'  or p['dataset'] == 'tless_5r'  or p['dataset'] == 'tless_7r' or p['dataset'] == 'tless_random_texture':
   model_type = 'cad'
 dp_model = dataset_params.get_model_params(
   p['datasets_path'], p['dataset'], model_type)
@@ -83,120 +200,18 @@ for obj_id in dp_model['obj_ids']:
 
 scene_ids = dataset_params.get_present_scene_ids(dp_split)
 print(scene_ids)
-for scene_id in scene_ids:
 
-  # Load scene info and ground-truth poses.
-  scene_camera = inout.load_scene_camera(
-    dp_split['scene_camera_tpath'].format(scene_id=scene_id))
-  scene_gt = inout.load_scene_gt(
-    dp_split['scene_gt_tpath'].format(scene_id=scene_id))
+with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
+    # Submit tasks for each scene_id to the ProcessPoolExecutor
+    future_to_scene_id = {executor.submit(process_scene, scene_id): scene_id for scene_id in scene_ids}
 
-  scene_gt_info = {}
-  im_ids = sorted(scene_gt.keys())
-  for im_counter, im_id in enumerate(im_ids):
-    if im_counter % 1 == 0:
-      misc.log(
-        'Calculating GT info - dataset: {} ({}, {}), scene: {}, im: {}'.format(
-          p['dataset'], p['dataset_split'], p['dataset_split_type'], scene_id,
-          im_id))
+    # Wait for all tasks to complete
+    concurrent.futures.wait(future_to_scene_id)
 
-    # Load depth image.
-    depth_fpath = dp_split['depth_tpath'].format(scene_id=scene_id, im_id=im_id)
-    if not os.path.exists(depth_fpath):
-      depth_fpath = depth_fpath.replace('.tif', '.png')
-    depth = inout.load_depth(depth_fpath)
-    depth *= scene_camera[im_id]['depth_scale']  # Convert to [mm].
-
-    K = scene_camera[im_id]['cam_K']
-    fx, fy, cx, cy = K[0, 0], K[1, 1], K[0, 2], K[1, 2]
-    im_size = (depth.shape[1], depth.shape[0])
-
-    scene_gt_info[im_id] = []
-    for gt_id, gt in enumerate(scene_gt[im_id]):
-
-      # Render depth image of the object model in the ground-truth pose.
-      depth_gt_large = ren.render_object(
-        gt['obj_id'], gt['cam_R_m2c'], gt['cam_t_m2c'],
-        fx, fy, cx + ren_cx_offset, cy + ren_cy_offset)['depth']
-      depth_gt = depth_gt_large[
-                   ren_cy_offset:(ren_cy_offset + im_height),
-                   ren_cx_offset:(ren_cx_offset + im_width)]
-
-      # Convert depth images to distance images.
-      dist_gt = misc.depth_im_to_dist_im_fast(depth_gt, K)
-      dist_im = misc.depth_im_to_dist_im_fast(depth, K)
-
-      # Estimation of the visibility mask.
-      visib_gt = visibility.estimate_visib_mask_gt(
-        dist_im, dist_gt, p['delta'], visib_mode='bop19')
-
-      # Mask of the object in the GT pose.
-      obj_mask_gt_large = depth_gt_large > 0
-      obj_mask_gt = dist_gt > 0
-
-      # Number of pixels in the whole object silhouette
-      # (even in the truncated part).
-      px_count_all = np.sum(obj_mask_gt_large)
-
-      # Number of pixels in the object silhouette with a valid depth measurement
-      # (i.e. with a non-zero value in the depth image).
-      px_count_valid = np.sum(dist_im[obj_mask_gt] > 0)
-
-      # Number of pixels in the visible part of the object silhouette.
-      px_count_visib = visib_gt.sum()
-
-      # Visible surface fraction.
-      if px_count_all > 0:
-        visib_fract = px_count_visib / float(px_count_all)
-      else:
-        visib_fract = 0.0
-
-      # Bounding box of the whole object silhouette
-      # (including the truncated part).
-      bbox = [-1, -1, -1, -1]
-      if px_count_visib > 0:
-        ys, xs = obj_mask_gt_large.nonzero()
-        ys -= ren_cy_offset
-        xs -= ren_cx_offset
-        bbox = misc.calc_2d_bbox(xs, ys, im_size)
-
-      # Bounding box of the visible surface part.
-      bbox_visib = [-1, -1, -1, -1]
-      if px_count_visib > 0:
-        ys, xs = visib_gt.nonzero()
-        bbox_visib = misc.calc_2d_bbox(xs, ys, im_size)
-
-      # Store the calculated info.
-      scene_gt_info[im_id].append({
-        'px_count_all': int(px_count_all),
-        'px_count_valid': int(px_count_valid),
-        'px_count_visib': int(px_count_visib),
-        'visib_fract': float(visib_fract),
-        'bbox_obj': [int(e) for e in bbox],
-        'bbox_visib': [int(e) for e in bbox_visib]
-      })
-
-      # Visualization of the visibility mask.
-      if p['vis_visibility_masks']:
-
-        depth_im_vis = visualization.depth_for_vis(depth, 0.2, 1.0)
-        depth_im_vis = np.dstack([depth_im_vis] * 3)
-
-        visib_gt_vis = visib_gt.astype(np.float)
-        zero_ch = np.zeros(visib_gt_vis.shape)
-        visib_gt_vis = np.dstack([zero_ch, visib_gt_vis, zero_ch])
-
-        vis = 0.5 * depth_im_vis + 0.5 * visib_gt_vis
-        vis[vis > 1] = 1
-
-        vis_path = p['vis_mask_visib_tpath'].format(
-          delta=p['delta'], dataset=p['dataset'], split=p['dataset_split'],
-          scene_id=scene_id, im_id=im_id, gt_id=gt_id)
-        misc.ensure_dir(os.path.dirname(vis_path))
-        inout.save_im(vis_path, vis)
-
-  # Save the info for the current scene.
-  scene_gt_info_path = dp_split['scene_gt_info_tpath'].format(scene_id=scene_id)
-  print(scene_gt_info_path)
-  misc.ensure_dir(os.path.dirname(scene_gt_info_path))
-  inout.save_json(scene_gt_info_path, scene_gt_info)
+    # Handle exceptions if any
+    for future in concurrent.futures.as_completed(future_to_scene_id):
+        scene_id = future_to_scene_id[future]
+        try:
+            future.result()
+        except Exception as exc:
+            print(f"Error processing scene_id {scene_id}: {exc}")

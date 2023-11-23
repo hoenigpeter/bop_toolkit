@@ -47,7 +47,7 @@ p = {
   # description of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/bop_toolkit/scripts/a6-cPnP-lmo-ape-test-iter0_lmo-test.csv',
+    '/home/hoenig/bop_toolkit/scripts/pix2pose-iccv19_tless-test-primesense.csv',
   ],
 
   # Folder with results to be evaluated.

@@ -21,10 +21,10 @@ from bop_toolkit_lib import misc
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tless',
+  'dataset': 'itodd',
 
   # Dataset split. Options: 'train', 'test'.
-  'dataset_split': 'test',
+  'dataset_split': 'val',
 
   # Dataset split type. Options: 'synt', 'real', None = default. See dataset_params.py for options.
   'dataset_split_type': None,

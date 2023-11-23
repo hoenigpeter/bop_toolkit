@@ -18,7 +18,7 @@ from bop_toolkit_lib import visibility
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tless_7r',
+  'dataset': 'tless_reconstructed',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'train',

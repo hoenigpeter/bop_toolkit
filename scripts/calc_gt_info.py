@@ -24,7 +24,7 @@ from bop_toolkit_lib import visibility
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tless',
+  'dataset': 'tless_reconstructed',
 
   # Dataset split. Options: 'train', 'val', 'test'.
   'dataset_split': 'train',
@@ -83,6 +83,7 @@ for obj_id in dp_model['obj_ids']:
 
 scene_ids = dataset_params.get_present_scene_ids(dp_split)
 print(scene_ids)
+
 for scene_id in scene_ids:
 
   # Load scene info and ground-truth poses.

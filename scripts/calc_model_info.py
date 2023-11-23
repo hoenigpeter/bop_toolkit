@@ -12,10 +12,10 @@ from bop_toolkit_lib import misc
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'egad',
+  'dataset': 'adapt',
 
   # Type of input object models.
-  'model_type': None,
+  'model_type': "cad",
 
   # Folder containing the BOP datasets.
   'datasets_path': config.datasets_path,
