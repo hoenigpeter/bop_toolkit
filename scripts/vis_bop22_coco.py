@@ -24,7 +24,7 @@ p = {
   # Names of files with detection results for which to calculate the Average Precisions
   # (assumed to be stored in folder p['results_path']). 
   'result_filenames': [
-    'yolox-random-aug_itodd-test.json',
+    'cnos-fastsam/cnos-fastsam_lmo-test_3cb298ea-e2eb-4713-ae9e-5a7134c5da0f.json',
   ],
 
   # Folder with results to be evaluated.
@@ -37,7 +37,7 @@ p = {
   'datasets_path': config.datasets_path,
   
   # Annotation type that should be evaluated. Can be 'segm' or 'bbox'.
-  'ann_type': 'bbox',
+  'ann_type': 'segm',
 
   # bbox type. Options: 'modal', 'amodal'.
   'bbox_type': 'amodal',

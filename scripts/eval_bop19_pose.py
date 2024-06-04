@@ -35,6 +35,7 @@ p = {
         'tyol': 15,
         'ycbv': 15,
         'hope': 15,
+        'mp6d': 15,
       },
       'vsd_taus': list(np.arange(0.05, 0.51, 0.05)),
       'vsd_normalized_by_diameter': True,
@@ -48,11 +49,6 @@ p = {
     {
       'n_top': -1,
       'type': 'mspd',
-      'correct_th': [[th] for th in np.arange(5, 51, 5)]
-    },
-    {
-      'n_top': -1,
-      'type': 'ad',
       'correct_th': [[th] for th in np.arange(5, 51, 5)]
     },
   ],
@@ -73,8 +69,11 @@ p = {
   # description of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/bop_toolkit/scripts/pix2pose-iccv19-reconstructed_tless-test-primesense.csv',
+    '/home/hoenig/bop_toolkit/scripts/pix2pose-iccv19_mp6d-test.csv',
   ],
+  # 'result_filenames': [
+  #   '/home/hoenig/2D3D_Dense_Correspondences_Pose_Estimator/output/lmo/method_lmo-test.csv',
+  # ],
 
   # Folder with results to be evaluated.
   'results_path': config.results_path,

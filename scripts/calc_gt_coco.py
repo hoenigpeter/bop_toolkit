@@ -34,7 +34,6 @@ p = {
 
   # Folder containing the BOP datasets.
   'datasets_path': config.datasets_path,
-
 }
 ################################################################################
 
@@ -77,6 +76,7 @@ for scene_id in dp_split['scene_ids']:
     scene_gt_info = inout.load_json(dp_split['scene_gt_info_tpath'].format(scene_id=scene_id), keys_to_int=True)
     # Output coco path
     coco_gt_path = dp_split['scene_gt_coco_tpath'].format(scene_id=scene_id)
+    print(coco_gt_path)
     if bbox_type == 'modal':
         coco_gt_path = coco_gt_path.replace('scene_gt_coco', 'scene_gt_coco_modal')
     misc.log('Calculating Coco Annotations - dataset: {} ({}, {}), scene: {}'.format(
@@ -87,6 +87,9 @@ for scene_id in dp_split['scene_ids']:
         im_id = int(scene_view)
         
         img_path = dp_split['rgb_tpath'].format(scene_id=scene_id, im_id=im_id)
+        print()
+        print(img_path)
+        print()
         relative_img_path = os.path.relpath(img_path, os.path.dirname(coco_gt_path))
         image_info = pycoco_utils.create_image_info(im_id, relative_img_path, dp_split['im_size'])
         coco_scene_output["images"].append(image_info)

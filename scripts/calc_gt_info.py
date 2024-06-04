@@ -24,13 +24,13 @@ from bop_toolkit_lib import visibility
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tless_reconstructed',
+  'dataset': 'ycb_ichores',
 
   # Dataset split. Options: 'train', 'val', 'test'.
-  'dataset_split': 'train',
+  'dataset_split': 'test',
 
   # Dataset split type. None = default. See dataset_params.py for options.
-  'dataset_split_type': 'pbr',
+  'dataset_split_type': None,
 
   # Whether to save visualizations of visibility masks.
   'vis_visibility_masks': False,

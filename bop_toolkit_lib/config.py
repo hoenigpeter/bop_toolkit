@@ -13,8 +13,11 @@ if 'BOP_PATH' in os.environ:
   datasets_path = os.environ['BOP_PATH']
 else:
   #datasets_path = r'/path/to/bop/datasets'
-  #datasets_path = '/home/hoenig/BOP/GDRNet/datasets/BOP_DATASETS'
-  datasets_path = '/home/hoenig/BOP/gdrnpp_bop2022/datasets/BOP_DATASETS'
+  #datasets_path = '/home/hoenig/BOP/gdrnpp_bop2022/datasets/BOP_DATASETS'
+  #datasets_path = '/home/hoenig/temp/gdrnet_pipeline/src/gdrnpp/datasets/BOP_DATASETS'
+  #datasets_path = '/home/hoenig/BOP/Pix2Pose/pix2pose_datasets'
+  #datasets_path = '/hdd/datasets_bop'
+  datasets_path = '/home/hoenig/datasets'
 
 # Folder with pose results to be evaluated.
 results_path = r'/home/hoenig/bop_toolkit/scripts'

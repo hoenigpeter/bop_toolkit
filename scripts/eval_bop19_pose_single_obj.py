@@ -19,16 +19,16 @@ from bop_toolkit_lib import misc
 p = {
   # Errors to calculate.
   'errors': [
-  #   {
-  #     'n_top': -1,
-  #     'type': 'te',
-  #     'correct_th': [[10]]
-  #   },
-    {
+      {
       'n_top': -1,
       'type': 'ad',
-      'correct_th': [[th] for th in np.arange(5, 51, 5)]
+      'correct_th': [[0.1]]
     },
+    #   {
+    #   'n_top': -1,
+    #   'type': 'proj',
+    #   'correct_th': [[5.0]]
+    # },
   ],
 
   # Minimum visible surface fraction of a valid GT pose.
@@ -47,8 +47,16 @@ p = {
   # description of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/bop_toolkit/scripts/pix2pose-iccv19_tless-test-primesense.csv',
+    '/home/hoenig/bop_toolkit/scripts/pix2pose-iccv19_mp6d-test.csv',
   ],
+
+  # 'result_filenames': [
+  #   '/hdd/datasets_bop/tless/perturbations_add_0.1/gaussian_blur/test_primesense_gaussian_blur_5/a6-cPnP-tless-random-texture-1-per-obj-iter0_tless-test.csv',
+  # ],
+
+  # 'result_filenames': [
+  #   '/home/hoenig/2D3D_Dense_Correspondences_Pose_Estimator/output/lmo/method_lmo-test.csv',
+  # ],
 
   # Folder with results to be evaluated.
   'results_path': config.results_path,
@@ -139,15 +147,6 @@ for result_filename in p['result_filenames']:
       '--max_sym_disc_step={}'.format(p['max_sym_disc_step']),
       '--skip_missing=1',
     ]
-    if error['type'] == 'vsd':
-      vsd_deltas_str = \
-        ','.join(['{}:{}'.format(k, v) for k, v in error['vsd_deltas'].items()])
-      calc_errors_cmd += [
-        '--vsd_deltas={}'.format(vsd_deltas_str),
-        '--vsd_taus={}'.format(','.join(map(str, error['vsd_taus']))),
-        '--vsd_normalized_by_diameter={}'.format(
-          error['vsd_normalized_by_diameter'])
-      ]
 
     misc.log('Running: ' + ' '.join(calc_errors_cmd))
     if subprocess.call(calc_errors_cmd) != 0:
@@ -157,15 +156,8 @@ for result_filename in p['result_filenames']:
     # For VSD, there is one path for each setting of tau. For the other pose
     # error functions, there is only one path.
     error_dir_paths = {}
-    if error['type'] == 'vsd':
-      for vsd_tau in error['vsd_taus']:
-        error_sign = misc.get_error_signature(
-          error['type'], error['n_top'], vsd_delta=error['vsd_deltas'][dataset],
-          vsd_tau=vsd_tau)
-        error_dir_paths[error_sign] = os.path.join(result_name, error_sign)
-    else:
-      error_sign = misc.get_error_signature(error['type'], error['n_top'])
-      error_dir_paths[error_sign] = os.path.join(result_name, error_sign)
+    error_sign = misc.get_error_signature(error['type'], error['n_top'])
+    error_dir_paths[error_sign] = os.path.join(result_name, error_sign)
 
     # Recall scores for all settings of the threshold of correctness (and also
     # of the misalignment tolerance tau in the case of VSD).

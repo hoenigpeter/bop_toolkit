@@ -261,7 +261,7 @@ for scene_id in scene_ids:
             for line in lines:
                 pt1 = tuple(corner_points_2d[line[0]].astype(int))
                 pt2 = tuple(corner_points_2d[line[1]].astype(int))
-                cv2.line(rgb, pt1, pt2, (0, 0, 255), 2)  # Red lines
+                cv2.line(rgb, pt1, pt2, (0, 0, 255), 3)
 
             rgb_image_rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
             print(vis_rgb_path)

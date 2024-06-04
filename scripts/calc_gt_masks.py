@@ -18,13 +18,13 @@ from bop_toolkit_lib import visibility
 ################################################################################
 p = {
   # See dataset_params.py for options.
-  'dataset': 'tless_reconstructed',
+  'dataset': 'lmo',
 
   # Dataset split. Options: 'train', 'val', 'test'.
-  'dataset_split': 'train',
+  'dataset_split': 'test',
 
   # Dataset split type. None = default. See dataset_params.py for options.
-  'dataset_split_type': 'pbr',
+  'dataset_split_type': None,
 
   # Tolerance used in the visibility test [mm].
   'delta': 15,  # 5 for ITODD, 15 for the other datasets.

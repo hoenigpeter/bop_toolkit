@@ -95,4 +95,6 @@ bop_toolkit_lib/config_internal.py
 *.jpg
 *.png
 *.csv
-./scripts/results/
+scripts/results/eval
+scripts/bop_symmetries
+scripts/cnos-fastsam

@@ -66,7 +66,7 @@ p = {
   # of the format. Example results can be found at:
   # https://bop.felk.cvut.cz/media/data/bop_sample_results/bop_challenge_2019/
   'result_filenames': [
-    '/home/hoenig/bop_toolkit/scripts/3-original-pix2pose-iccv19_itodd-test.csv',
+    '/home/hoenig/bop_toolkit/scripts/pix2pose-iccv19_tless-test-primesense.csv',
   ],
 
   # Folder containing the BOP datasets.
